@@ -3,7 +3,7 @@
 
 // more later
 enum Opcodes {
-    MOV = 0x01, // this will moce to an immediate value into a register
+    MOV = 0x01, // this will move to an immediate value into a register
     ADD = 0x02, // this adds one register to another
     JMP = 0x03, // this jumps to a memory address
     HLT = 0xFF // this halts execution
@@ -51,7 +51,14 @@ void VirtualCPU::executeInstruction(uint8_t opcode) {
        case HLT: {
         halted = true;
         break;
-       } 
+       }
+       
+       case JMP: {
+        uint8_t addr = memory[++pc];
+        pc = addr;
+        break;
+}
+
 
        default: {
         std::cerr << "Unknown opcode: " << static_cast<int>(opcode) << "\n";
@@ -59,13 +66,16 @@ void VirtualCPU::executeInstruction(uint8_t opcode) {
         break;
        }
     }
+    
+    printState();
+
 }
 
 // this prints registers and PC for debugging
 void VirtualCPU::printState() const {
     std::cout << "PC: " << static_cast<int>(pc) << "\n";
     for (int i = 0; i < 4; ++i) {
-        std::count << "R" << i << ": " << static_cast<int>(registers[i]) << " ";
+        std::cout << "R" << i << ": " << static_cast<int>(registers[i]) << " ";
     }
-    std::count << "\n---\n";
+    std::cout << "\n---\n";
 }
