@@ -12,7 +12,8 @@ std::unordered_map<std::string, uint8_t> opcodes = {
     {"MOV", 0x01},
     {"ADD", 0x02},
     {"JMP", 0x03},
-    {"HLT", 0xFF}
+    {"SUB", 0x04},
+    {"HLT", 0xFF},
 };
 
 // Register encodings
@@ -20,7 +21,7 @@ std::unordered_map<std::string, uint8_t> registers = {
     {"R0", 0x00},
     {"R1", 0x01},
     {"R2", 0x02},
-    {"R3", 0x03}
+    {"R3", 0x03},
 };
 
 // this trims whitespace from both ends of a string
@@ -59,6 +60,7 @@ std::vector<uint8_t> assemble(const std::string& filename) {
 
             if (instr == "MOV") address += 3;
             else if (instr == "ADD") address += 3;
+            else if (instr == "SUB") address += 3;
             else if (instr == "JMP") address += 2;
             else if (instr == "HLT") address += 1;
         }
@@ -85,7 +87,7 @@ std::vector<uint8_t> assemble(const std::string& filename) {
             iss >> reg >> value;
             program.push_back(registers[reg]);
             program.push_back(static_cast<uint8_t>(value));
-        } else if (instr == "ADD") {
+        } else if (instr == "ADD" || instr == "SUB") {
             std::string r1, r2;
             iss >> r1 >> r2;
             program.push_back(registers[r1]);

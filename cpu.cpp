@@ -6,7 +6,8 @@ enum Opcodes {
     MOV = 0x01, // this will move to an immediate value into a register
     ADD = 0x02, // this adds one register to another
     JMP = 0x03, // this jumps to a memory address
-    HLT = 0xFF // this halts execution
+    SUB = 0x04, // this subtracts vals in registers
+    HLT = 0xFF, // this halts execution
 };
 
 // this is a constuctor that initalizes memory and registers
@@ -58,6 +59,14 @@ void VirtualCPU::executeInstruction(uint8_t opcode) {
         pc = addr;
         break;
 }
+       case SUB: {
+        uint8_t reg1 = memory[++pc];
+        uint8_t reg2 = memory[++pc];
+        registers[reg1] -= registers[reg2];
+        pc++;
+        break;
+}
+
 
 
        default: {
