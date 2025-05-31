@@ -22,10 +22,11 @@ private:
     std::array<uint8_t, 4> registers;      // R0, R1, R2, R3
     std::array<uint8_t, 256> memory;       // 256 bytes of RAM
     uint8_t pc;                            // Program counter
-    bool halted;                           // Halt flag
+    bool halted;
+    bool zeroFlag = false;                           
 
     // Handle a single instruction based on opcode
     void executeInstruction(uint8_t opcode);
 };
 
-#endif 
+#endif

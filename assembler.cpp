@@ -13,6 +13,8 @@ std::unordered_map<std::string, uint8_t> opcodes = {
     {"ADD", 0x02},
     {"JMP", 0x03},
     {"SUB", 0x04},
+    {"CMP", 0x05},
+    {"JZ",  0x06},
     {"HLT", 0xFF},
 };
 
@@ -61,7 +63,9 @@ std::vector<uint8_t> assemble(const std::string& filename) {
             if (instr == "MOV") address += 3;
             else if (instr == "ADD") address += 3;
             else if (instr == "SUB") address += 3;
+            else if (instr == "CMP") address += 3;
             else if (instr == "JMP") address += 2;
+            else if (instr == "JZ")  address += 2;
             else if (instr == "HLT") address += 1;
         }
     }
@@ -95,6 +99,20 @@ std::vector<uint8_t> assemble(const std::string& filename) {
         } else if (instr == "JMP") {
             std::string target;
             iss >> target;
+        } else if (instr == "CMP") {
+            std::string r1, r2;
+            iss >> r1 >> r2;
+            program.push_back(registers[r1]);
+            program.push_back(registers[r2]);
+        } else if (instr == "JZ") {
+            std::string target;
+            iss >> target;
+
+            if (labels.count(target)) {
+                program.push_back(labels[target]);
+            } else {
+                program.push_back(static_cast<uint8_t>(std::stoi(target)));
+            }
 
             if (labels.count(target)) {
                 program.push_back(labels[target]);

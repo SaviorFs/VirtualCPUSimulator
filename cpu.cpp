@@ -7,6 +7,8 @@ enum Opcodes {
     ADD = 0x02, // this adds one register to another
     JMP = 0x03, // this jumps to a memory address
     SUB = 0x04, // this subtracts vals in registers
+    CMP = 0x05, // compares two registers
+    JZ  = 0x06, // jumps if the zeroFlag is set
     HLT = 0xFF, // this halts execution
 };
 
@@ -66,8 +68,23 @@ void VirtualCPU::executeInstruction(uint8_t opcode) {
         pc++;
         break;
 }
+        case CMP: {
+            uint8_t reg1 = memory[++pc];
+            uint8_t reg2 = memory[++pc];
+            zeroFlag = (registers[reg1] == registers[reg2]);
+            pc++;
+            break;
+}
 
-
+        case JZ: {
+            uint8_t addr = memory[++pc];
+            if (zeroFlag) {
+                pc = addr;
+            } else {
+                pc++;
+            }
+            break;
+}
 
        default: {
         std::cerr << "Unknown opcode: " << static_cast<int>(opcode) << "\n";
